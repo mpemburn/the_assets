@@ -16,3 +16,5 @@
 $router->get('/', function () use ($router) {
     return view('welcome');
 });
+
+$router->get('/report', 'ReportController@show');
