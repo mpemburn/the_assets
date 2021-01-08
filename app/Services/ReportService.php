@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Inventory;
+use App\Models\IssueReport;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -19,7 +20,7 @@ class ReportService
         }
 
         if ($reader) {
-            $spreadsheet = $reader->load(storage_path() . '/data/Banner School Inventory.xlsx');
+            $spreadsheet = $reader->load(storage_path() . '/data/' . env('BANNER_INVENTORY_XLS'));
 
             $data = $spreadsheet->getActiveSheet()->toArray();
             $inventory->setHeaders(collect($data)->first());
@@ -33,5 +34,26 @@ class ReportService
         return $inventory;
     }
 
+
+    public function getWyebotIssues(): IssueReport
+    {
+        $issueReport = new IssueReport();
+
+        try {
+            $reader = IOFactory::createReader("Xlsx");
+        } catch (Exception $e) {
+            return $issueReport;
+        }
+
+        if ($reader) {
+            $spreadsheet = $reader->load(storage_path() . '/data/Wyebot Issues.xlsx');
+
+            $data = $spreadsheet->getActiveSheet()->toArray();
+            $issueReport->loadIssues($data);
+        }
+
+
+        return $issueReport;
+    }
 
 }
