@@ -10,8 +10,17 @@ class ReportController extends Controller
     {
         $report = new ReportService();
 
-        $issues = $report->getWyebotIssues();
-        !d($issues->getAffectedDevices(2));
+        $issueReport = $report->getWyebotIssues();
+        $inventory = $report->getInventory();
+//        foreach ($issueReport->getAffectedDevices(2)->toArray() as $key => $device) {
+//            !d($inventory->getDeviceString(key($device)));
+//        }
+
+        return view('issue_report', [
+            'issueReport' => $issueReport,
+            'issues' => $issueReport->getIssues()->toArray(),
+            'inventory' => $report->getInventory()
+        ]);
 
     }
 

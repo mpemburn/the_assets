@@ -26,13 +26,42 @@ class IssueReport
         });
     }
 
+    public function getIssues(): Collection
+    {
+        return $this->issues;
+    }
+
+    public function getAllAffectedDevices(): Collection
+    {
+        return $this->affectDevices;
+    }
+
     public function getAffectedDevices(int $index): Collection
     {
         return $this->affectDevices->pull($index);
     }
 
+    public function hasAffectedDevices(int $index): bool
+    {
+        return $this->affectDevices->contains(function ($value, $key) use ($index) {
+            return $key === $index;
+        });
+    }
+
     protected function setAffectedDevices(string $deviceString, int $index): void
     {
-        $this->affectDevices->put($index, collect(explode("\n", $deviceString)));
+        $devices = collect(explode("\n", $deviceString))
+            ->map(function ($device, $key) {
+                preg_match('/[\w]{2}:[\w]{2}:[\w]{2}:[\w]{2}:[\w]{2}:[\w]{2}/', $device, $matches);
+                $macAddress = $matches ? $matches[0] : null;
+                if ($macAddress) {
+                    return [$macAddress => $device];
+                }
+                return null;
+            })->filter();
+
+        if ($devices->isNotEmpty()) {
+            $this->affectDevices->put($index, $devices);
+        }
     }
 }

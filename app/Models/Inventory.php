@@ -37,4 +37,16 @@ class Inventory
             return $device[$index] === $key;
         });
     }
+
+    public function getDeviceString(string $key): string
+    {
+        $device = $this->findDevice($key);
+
+        if ($device->isNotEmpty()) {
+            $deviceArray = current($device->toArray());
+
+            return $deviceArray[0] . ' ' . $deviceArray[1] . ' ' . $deviceArray[2] . ' ' . $deviceArray[3] . ' ' . $deviceArray[4];
+        }
+        return '';
+    }
 }
