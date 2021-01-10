@@ -45,7 +45,7 @@ class Inventory
         if ($device->isNotEmpty()) {
             $deviceArray = current($device->toArray());
 
-            return $deviceArray[0] . ' ' . $deviceArray[1] . ' ' . $deviceArray[2] . ' ' . $deviceArray[3] . ' ' . $deviceArray[4];
+            return 'DEVICE: ' . $deviceArray[0] . ' — Location: Building ' . $deviceArray[2] . ' (Type: ' . $deviceArray[3] . ' ' . $deviceArray[4] . ')';
         }
         return '';
     }
